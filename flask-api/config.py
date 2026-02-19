@@ -4,13 +4,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    # Configurações do Flask
     SECRET_KEY = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
-    SESSION_COOKIE_SECURE = os.getenv('SESSION_COOKIE_SECURE', 'True').lower() == 'true'
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_SAMESITE = 'Lax'
     
-    # Configurações do Banco
+    # JWT Configurations
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
+    JWT_ACCESS_TOKEN_EXPIRES = int(os.getenv('JWT_ACCESS_TOKEN_EXPIRES', 900))
+    
     DB_CONFIG = {
         'host': os.getenv('DB_HOST'),
         'port': os.getenv('DB_PORT'),
