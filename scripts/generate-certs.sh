@@ -167,18 +167,10 @@ gen_server_cert "NGINX" "$NGINX_CERTS"
 gen_client_cert "iot-client"
 gen_client_cert "smartlab"
 
-# Copiar certificado do usuário smartlab para Flask
-cp "$EXPORT_DIR/smartlab.crt" "$FLASK_CERTS/smartlab.crt"
-cp "$EXPORT_DIR/smartlab.key" "$FLASK_CERTS/smartlab.key"
-
-# Também copiar CA para Flask
+cp "$EXPORT_DIR/smartlab.crt" "$FLASK_CERTS/client.crt"
+cp "$EXPORT_DIR/smartlab.key" "$FLASK_CERTS/client.key"
 cp "$CA_DIR/ca.crt" "$FLASK_CERTS/ca.crt"
 
-# Copiar CA para export
 cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
-
-chmod 600 "$FLASK_CERTS/smartlab.key"
-chmod 644 "$FLASK_CERTS/smartlab.crt"
-chmod 644 "$FLASK_CERTS/ca.crt"
 
 echo "✅ Certificados gerados com SAN + EKU corretamente"
