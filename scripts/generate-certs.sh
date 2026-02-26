@@ -22,7 +22,7 @@ DAYS_CERT=365
 # SUBJECTS
 # =========================================================
 SUBJ_CA="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=Smartlab CA"
-SUBJ_MQTT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=mqtt-broker"
+SUBJ_MQTT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=192.168.66.11"
 SUBJ_POSTGRES="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=postgres-db"
 SUBJ_NGINX="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=192.168.66.11"
 SUBJ_CLIENT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=iot-client"
