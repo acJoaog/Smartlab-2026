@@ -48,6 +48,16 @@ extendedKeyUsage=clientAuth
 EOF
 }
 
+mqtt_server_ext() {
+cat > "$1" <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=IP:${IP_BROKER}
+EOF
+}
+
 # =========================================================
 # DIRS
 # =========================================================
@@ -95,7 +105,11 @@ gen_server_cert() {
     -subj "/C=BR/ST=MG/L=SRS/O=CSILAB/CN=${IP_BROKER}" \
     -out "$CERT_DIR/server.csr"
 
-  server_ext "$CERT_DIR/ext.cnf"
+  if [ "$NAME" = "MQTT" ]; then
+    mqtt_server_ext "$CERT_DIR/ext.cnf"
+  else
+    server_ext "$CERT_DIR/ext.cnf"
+  fi
 
   openssl x509 -req \
     -in "$CERT_DIR/server.csr" \
