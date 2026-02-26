@@ -167,8 +167,8 @@ gen_server_cert "NGINX" "$NGINX_CERTS"
 gen_client_cert "iot-client"
 gen_client_cert "smartlab"
 
-cp "$EXPORT_DIR/smartlab-client.crt" "$FLASK_CERTS/client.crt"
-cp "$EXPORT_DIR/smartlab-client.key" "$FLASK_CERTS/client.key"
+cp "$EXPORT_DIR/smartlabt.crt" "$FLASK_CERTS/client.crt"
+cp "$EXPORT_DIR/smartlab.key" "$FLASK_CERTS/client.key"
 cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
 
 echo "✅ Certificados gerados com SAN + EKU corretamente"
