@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-# =========================================================
-# PATHS
-# =========================================================
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
@@ -16,38 +13,45 @@ NGINX_CERTS="$ROOT_DIR/nginx/certs"
 FLASK_CERTS="$ROOT_DIR/flask-api/certs"
 
 DAYS_CA=3650
-DAYS_CERT=365
+DAYS_CERT=825
 
-# =========================================================
-# SUBJECTS
-# =========================================================
-SUBJ_CA="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=Smartlab CA"
-SUBJ_MQTT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=192.168.66.11"
-SUBJ_POSTGRES="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=postgres-db"
-SUBJ_NGINX="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=192.168.66.11"
-SUBJ_CLIENT="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=iot-client"
-SUBJ_CLIENT_SMARTLAB="/C=BR/ST=MG/L=SRS/O=CSILAB/CN=smartlab"
+IP_BROKER="192.168.66.11"
 
-# =========================================================
-# HELPERS
-# =========================================================
 mk() { mkdir -p "$1"; }
+
 gen_key() { openssl genrsa -out "$1" 2048; }
-gen_csr() { openssl req -new -key "$1" -out "$2" -subj "$3"; }
-sign() {
-  openssl x509 -req \
-    -in "$1" \
-    -CA "$CA_DIR/ca.crt" \
-    -CAkey "$CA_DIR/ca.key" \
-    -CAcreateserial \
-    -out "$2" \
-    -days "$DAYS_CERT" \
-    -sha256
+
+# =========================================================
+# EXT FILE HELPERS
+# =========================================================
+
+server_ext() {
+cat > "$1" <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature,keyEncipherment
+extendedKeyUsage=serverAuth
+subjectAltName=@alt_names
+
+[alt_names]
+IP.1=${IP_BROKER}
+DNS.1=localhost
+EOF
+}
+
+client_ext() {
+cat > "$1" <<EOF
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage=digitalSignature
+extendedKeyUsage=clientAuth
+EOF
 }
 
 # =========================================================
 # DIRS
 # =========================================================
+
 echo "📁 Criando diretórios..."
 mk "$CA_DIR"
 mk "$MQTT_CERTS"
@@ -59,85 +63,112 @@ mk "$FLASK_CERTS"
 # =========================================================
 # CA
 # =========================================================
+
 echo "🔐 Gerando CA..."
+
 gen_key "$CA_DIR/ca.key"
-openssl req -new -x509 \
+
+openssl req -x509 -new -nodes \
   -key "$CA_DIR/ca.key" \
-  -out "$CA_DIR/ca.crt" \
-  -days "$DAYS_CA" \
-  -subj "$SUBJ_CA"
+  -sha256 \
+  -days $DAYS_CA \
+  -subj "/C=BR/ST=MG/L=SRS/O=CSILAB/CN=Smartlab CA" \
+  -out "$CA_DIR/ca.crt"
 
 chmod 600 "$CA_DIR/ca.key"
 chmod 644 "$CA_DIR/ca.crt"
 
 # =========================================================
-# MQTT
+# SERVER CERT GENERATOR
 # =========================================================
-echo "🔐 MQTT..."
-gen_key "$MQTT_CERTS/server.key"
-gen_csr "$MQTT_CERTS/server.key" "$MQTT_CERTS/server.csr" "$SUBJ_MQTT"
-sign "$MQTT_CERTS/server.csr" "$MQTT_CERTS/server.crt"
-rm "$MQTT_CERTS/server.csr"
 
-cp "$CA_DIR/ca.crt" "$MQTT_CERTS/ca.crt"
+gen_server_cert() {
+  NAME=$1
+  CERT_DIR=$2
 
-chmod 600 "$MQTT_CERTS/server.key"
-chmod 644 "$MQTT_CERTS/server.crt"
-chmod 644 "$MQTT_CERTS/ca.crt"
+  echo "🔐 $NAME..."
 
-# =========================================================
-# POSTGRES
-# =========================================================
-echo "🔐 PostgreSQL..."
-gen_key "$POSTGRES_CERTS/server.key"
-gen_csr "$POSTGRES_CERTS/server.key" "$POSTGRES_CERTS/server.csr" "$SUBJ_POSTGRES"
-sign "$POSTGRES_CERTS/server.csr" "$POSTGRES_CERTS/server.crt"
-rm "$POSTGRES_CERTS/server.csr"
+  gen_key "$CERT_DIR/server.key"
 
-cp "$CA_DIR/ca.crt" "$POSTGRES_CERTS/ca.crt"
+  openssl req -new \
+    -key "$CERT_DIR/server.key" \
+    -subj "/C=BR/ST=MG/L=SRS/O=CSILAB/CN=${IP_BROKER}" \
+    -out "$CERT_DIR/server.csr"
 
-chmod 600 "$POSTGRES_CERTS/server.key"
-chmod 644 "$POSTGRES_CERTS/server.crt"
-chmod 644 "$POSTGRES_CERTS/ca.crt"
+  server_ext "$CERT_DIR/ext.cnf"
 
-# =========================================================
-# NGINX
-# =========================================================
-echo "🔐 NGINX ..."
-gen_key "$NGINX_CERTS/server.key"
-gen_csr "$NGINX_CERTS/server.key" "$NGINX_CERTS/server.csr" "$SUBJ_NGINX"
-sign "$NGINX_CERTS/server.csr" "$NGINX_CERTS/server.crt"
-rm "$NGINX_CERTS/server.csr"
+  openssl x509 -req \
+    -in "$CERT_DIR/server.csr" \
+    -CA "$CA_DIR/ca.crt" \
+    -CAkey "$CA_DIR/ca.key" \
+    -CAcreateserial \
+    -out "$CERT_DIR/server.crt" \
+    -days $DAYS_CERT \
+    -sha256 \
+    -extfile "$CERT_DIR/ext.cnf"
 
-cp "$CA_DIR/ca.crt" "$NGINX_CERTS/ca.crt"
+  rm "$CERT_DIR/server.csr"
+  rm "$CERT_DIR/ext.cnf"
 
-chmod 600 "$NGINX_CERTS/server.key"
-chmod 644 "$NGINX_CERTS/server.crt"
-chmod 644 "$NGINX_CERTS/ca.crt"
+  cp "$CA_DIR/ca.crt" "$CERT_DIR/ca.crt"
+
+  chmod 600 "$CERT_DIR/server.key"
+  chmod 644 "$CERT_DIR/server.crt"
+  chmod 644 "$CERT_DIR/ca.crt"
+}
 
 # =========================================================
-# CLIENTS (EXPORT)
+# CLIENT CERT GENERATOR
 # =========================================================
-echo "🔐 Clients smartlab (export)..."
 
-# client.key / client.crt
-gen_key "$EXPORT_DIR/client.key"
-gen_csr "$EXPORT_DIR/client.key" "$EXPORT_DIR/client.csr" "$SUBJ_CLIENT"
-sign "$EXPORT_DIR/client.csr" "$EXPORT_DIR/client.crt"
-rm "$EXPORT_DIR/client.csr"
+gen_client_cert() {
+  NAME=$1
 
-# smartlab-client.key / smartlab-client.crt
-gen_key "$EXPORT_DIR/smartlab-client.key"
-gen_csr "$EXPORT_DIR/smartlab-client.key" "$EXPORT_DIR/smartlab-client.csr" "$SUBJ_CLIENT_SMARTLAB"
-sign "$EXPORT_DIR/smartlab-client.csr" "$EXPORT_DIR/smartlab-client.crt"
-rm "$EXPORT_DIR/smartlab-client.csr"
+  echo "🔐 Client $NAME..."
+
+  gen_key "$EXPORT_DIR/${NAME}.key"
+
+  openssl req -new \
+    -key "$EXPORT_DIR/${NAME}.key" \
+    -subj "/C=BR/ST=MG/L=SRS/O=CSILAB/CN=${NAME}" \
+    -out "$EXPORT_DIR/${NAME}.csr"
+
+  client_ext "$EXPORT_DIR/ext.cnf"
+
+  openssl x509 -req \
+    -in "$EXPORT_DIR/${NAME}.csr" \
+    -CA "$CA_DIR/ca.crt" \
+    -CAkey "$CA_DIR/ca.key" \
+    -CAcreateserial \
+    -out "$EXPORT_DIR/${NAME}.crt" \
+    -days $DAYS_CERT \
+    -sha256 \
+    -extfile "$EXPORT_DIR/ext.cnf"
+
+  rm "$EXPORT_DIR/${NAME}.csr"
+  rm "$EXPORT_DIR/ext.cnf"
+
+  chmod 600 "$EXPORT_DIR/${NAME}.key"
+  chmod 644 "$EXPORT_DIR/${NAME}.crt"
+}
+
+# =========================================================
+# GENERATE SERVERS
+# =========================================================
+
+gen_server_cert "MQTT" "$MQTT_CERTS"
+gen_server_cert "PostgreSQL" "$POSTGRES_CERTS"
+gen_server_cert "NGINX" "$NGINX_CERTS"
+
+# =========================================================
+# GENERATE CLIENTS
+# =========================================================
+
+gen_client_cert "iot-client"
+gen_client_cert "smartlab-client"
 
 cp "$EXPORT_DIR/smartlab-client.crt" "$FLASK_CERTS/client.crt"
 cp "$EXPORT_DIR/smartlab-client.key" "$FLASK_CERTS/client.key"
-
 cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
 
-chmod 600 "$EXPORT_DIR"/*.key
-chmod 644 "$EXPORT_DIR"/*.crt
-
-echo "✅ Certificados gerados com sucesso"
+echo "✅ Certificados gerados com SAN + EKU corretamente"
