@@ -181,6 +181,8 @@ gen_server_cert "NGINX" "$NGINX_CERTS"
 gen_client_cert "iot-client"
 gen_client_cert "smartlab"
 
+cat "$NGINX_CERTS/server.crt" "$NGINX_CERTS/ca.crt" > "$NGINX_CERTS/fullchain.crt"
+
 cp "$EXPORT_DIR/smartlab.crt" "$FLASK_CERTS/client.crt"
 cp "$EXPORT_DIR/smartlab.key" "$FLASK_CERTS/client.key"
 cp "$CA_DIR/ca.crt" "$FLASK_CERTS/ca.crt"
