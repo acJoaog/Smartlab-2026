@@ -70,6 +70,18 @@ services:
     restart: unless-stopped
     networks:
       - smartlab-network
+  
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - ./homeassistant:/config
+    environment:
+      - TZ=America/Sao_Paulo
+    networks:
+      - smartlab-network
 
 networks:
   smartlab-network:

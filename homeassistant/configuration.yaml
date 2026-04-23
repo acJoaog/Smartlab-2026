@@ -1,0 +1,6 @@
+mqtt:
+  light:
+    - name: "Lampada 1"
+      command_topic: "smartlab/lampada/set/1"
+      payload_on: "ON"
+      payload_off: "OFF"
