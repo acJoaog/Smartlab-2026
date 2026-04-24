@@ -11,6 +11,7 @@ MQTT_CERTS="$ROOT_DIR/mqtt/certs"
 POSTGRES_CERTS="$ROOT_DIR/postgres/certs"
 NGINX_CERTS="$ROOT_DIR/nginx/certs"
 FLASK_CERTS="$ROOT_DIR/flask-api/certs"
+HA="$ROOT_DIR/config/certs"
 
 DAYS_CA=3650
 DAYS_CERT=825
@@ -186,6 +187,9 @@ cat "$NGINX_CERTS/server.crt" "$NGINX_CERTS/ca.crt" > "$NGINX_CERTS/fullchain.cr
 cp "$EXPORT_DIR/smartlab.crt" "$FLASK_CERTS/client.crt"
 cp "$EXPORT_DIR/smartlab.key" "$FLASK_CERTS/client.key"
 cp "$CA_DIR/ca.crt" "$FLASK_CERTS/ca.crt"
+
+mkdir -p "$HA"
+cp "$CA_DIR/ca.crt" "$HA/ca.crt"
 
 cp "$CA_DIR/ca.crt" "$EXPORT_DIR/ca.crt"
 
