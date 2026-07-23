@@ -1,0 +1,200 @@
+# =========================
+# TV SAMSUNG
+# =========================
+
+tv_samsung_power:
+  alias: TV Samsung Power
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "power"
+
+tv_samsung_up:
+  alias: TV Samsung Up
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "up"
+
+tv_samsung_down:
+  alias: TV Samsung Down
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "down"
+
+tv_samsung_left:
+  alias: TV Samsung Left
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "left"
+
+tv_samsung_right:
+  alias: TV Samsung Right
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "right"
+
+tv_samsung_ok:
+  alias: TV Samsung OK
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "ok"
+
+tv_samsung_return:
+  alias: TV Samsung Return
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "return"
+
+tv_samsung_smart:
+  alias: TV Samsung Smart
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "smart"
+
+tv_samsung_volume_up:
+  alias: TV Samsung Volume Up
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "volume_up"
+
+tv_samsung_volume_down:
+  alias: TV Samsung Volume Down
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "volume_down"
+
+tv_samsung_mute:
+  alias: TV Samsung Mute
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "mute"
+
+tv_samsung_source:
+  alias: TV Samsung Source
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/samsung/set/1"
+        payload: "source"
+
+
+# =========================
+# TV LG
+# =========================
+
+tv_lg_power:
+  alias: TV LG Power
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "power"
+
+tv_lg_up:
+  alias: TV LG Up
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "up"
+
+tv_lg_down:
+  alias: TV LG Down
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "down"
+
+tv_lg_left:
+  alias: TV LG Left
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "left"
+
+tv_lg_right:
+  alias: TV LG Right
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "right"
+
+tv_lg_ok:
+  alias: TV LG OK
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "ok"
+
+tv_lg_return:
+  alias: TV LG Return
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "return"
+
+tv_lg_smart:
+  alias: TV LG Smart
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "smart"
+
+tv_lg_volume_up:
+  alias: TV LG Volume Up
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "volume_up"
+
+tv_lg_volume_down:
+  alias: TV LG Volume Down
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "volume_down"
+
+tv_lg_mute:
+  alias: TV LG Mute
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "mute"
+
+tv_lg_source:
+  alias: TV LG Source
+  sequence:
+    - action: mqtt.publish
+      data:
+        topic: "smartlab/tv/lg/set/1"
+        payload: "source"

@@ -1,6 +1,250 @@
+script: !include scripts.yaml
 mqtt:
   switch:
     - name: "Lampada 1"
+      unique_id: lampada_1
       command_topic: "smartlab/lampada/set/1"
+      state_topic: "smartlab/lampada/state/1"
       payload_on: "ON"
       payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+    
+    - name: "Lampada 2"
+      unique_id: lampada_2
+      command_topic: "smartlab/lampada/set/2"
+      state_topic: "smartlab/lampada/state/2"
+      payload_on: "ON"
+      payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+
+    - name: "Lampada 3"
+      unique_id: lampada_3
+      command_topic: "smartlab/lampada/set/3"
+      state_topic: "smartlab/lampada/state/3"
+      payload_on: "ON"
+      payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+
+    - name: "Lampada 4"
+      unique_id: lampada_4
+      command_topic: "smartlab/lampada/set/4"
+      state_topic: "smartlab/lampada/state/4"
+      payload_on: "ON"
+      payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+
+    - name: "Lampada 5"
+      unique_id: lampada_5
+      command_topic: "smartlab/lampada/set/5"
+      state_topic: "smartlab/lampada/state/5"
+      payload_on: "ON"
+      payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+
+    - name: "Lampada 6"
+      unique_id: lampada_6
+      command_topic: "smartlab/lampada/set/6"
+      state_topic: "smartlab/lampada/state/6"
+      payload_on: "ON"
+      payload_off: "OFF"
+      state_on: "ON"
+      state_off: "OFF"
+    
+  climate:
+    - name: "Ar Condicionado 1"
+      unique_id: ar_condicionado_1
+
+      mode_command_topic: "smartlab/arcond/mode/set/1"
+      temperature_command_topic: "smartlab/arcond/temp/set/1"
+
+      modes:
+        - "off"
+        - "auto"
+
+      min_temp: 17
+      max_temp: 30
+      temp_step: 1
+      temperature_unit: "C"
+
+      optimistic: true
+      retain: false
+
+    - name: "Ar Condicionado 2"
+      unique_id: ar_condicionado_2
+
+      mode_command_topic: "smartlab/arcond/mode/set/2"
+      temperature_command_topic: "smartlab/arcond/temp/set/2"
+
+      modes:
+        - "off"
+        - "auto"
+
+      min_temp: 17
+      max_temp: 30
+      temp_step: 1
+      temperature_unit: "C"
+
+      optimistic: true
+      retain: false
+    
+    - name: "Ar Condicionado 3"
+      unique_id: ar_condicionado_3
+
+      mode_command_topic: "smartlab/arcond/mode/set/3"
+      temperature_command_topic: "smartlab/arcond/temp/set/3"
+
+      modes:
+        - "off"
+        - "auto"
+
+      min_temp: 17
+      max_temp: 30
+      temp_step: 1
+      temperature_unit: "C"
+
+      optimistic: true
+      retain: false
+
+    - name: "Ar Condicionado 4"
+      unique_id: ar_condicionado_4
+
+      mode_command_topic: "smartlab/arcond/mode/set/4"
+      temperature_command_topic: "smartlab/arcond/temp/set/4"
+
+      modes:
+        - "off"
+        - "auto"
+
+      min_temp: 17
+      max_temp: 30
+      temp_step: 1
+      temperature_unit: "C"
+
+      optimistic: true
+      retain: false
+
+  cover:
+    - name: "Cortina 1"
+      unique_id: curtain_1
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/1"
+      state_topic: "smartlab/curtain/state/1"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
+
+    - name: "Cortina 2"
+      unique_id: curtain_2
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/2"
+      state_topic: "smartlab/curtain/state/2"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
+
+    - name: "Cortina 3"
+      unique_id: curtain_3
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/3"
+      state_topic: "smartlab/curtain/state/3"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
+
+    - name: "Cortina 4"
+      unique_id: curtain_4
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/4"
+      state_topic: "smartlab/curtain/state/4"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
+
+    - name: "Cortina 5"
+      unique_id: curtain_5
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/5"
+      state_topic: "smartlab/curtain/state/5"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
+
+    - name: "Cortina 6"
+      unique_id: curtain_6
+      device_class: curtain
+
+      command_topic: "smartlab/curtain/set/6"
+      state_topic: "smartlab/curtain/state/6"
+
+      payload_open: "OPEN"
+      payload_close: "CLOSE"
+      payload_stop: "STOP"
+
+      state_open: "open"
+      state_opening: "opening"
+      state_closed: "closed"
+      state_closing: "closing"
+
+      qos: 1
+      retain: false
+      optimistic: false
